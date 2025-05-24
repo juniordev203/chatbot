@@ -1,20 +1,24 @@
-# Sử dụng image Node.js chính thức
+# Base image
 FROM node:18
 
-# Tạo thư mục làm việc trong container
+# Set working directory
 WORKDIR /usr/src/app
 
-# Sao chép package.json trước để cài đặt dependencies
+# Copy dependencies
 COPY package*.json ./
+COPY tsconfig.json ./
 
-# Cài dependencies
+# Install deps
 RUN npm install
 
-# Sao chép toàn bộ mã nguồn vào container
-COPY . .
+# Copy source code
+COPY ./src ./src
 
-# Expose port ứng dụng (ví dụ: 3000)
+# Build TypeScript -> JavaScript
+RUN npm run build
+
+# Expose port
 EXPOSE 3000
 
-# Command chạy ứng dụng
-CMD ["node", "index.js"]
+# Run app
+CMD ["npm", "start"]
